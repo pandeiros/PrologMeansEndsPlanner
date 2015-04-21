@@ -14,9 +14,10 @@ plan(State, Goals, [], State) :-
 
 % Otherwise, we decompose plan into PrePlan and the rest - PostPlan.
 plan(State, Goals, Plan, FinalState) :-
-    conc(PrePlan, [Action | PostPlan], Plan),       % Plan decomposition.
-    selectGoal(State, Goals, Goal),                 % Get current Goal from Goals, that is not a memeber of State.
-    achieves(Action, Goal),
+    append(PrePlan, [Action | PostPlan], Plan),       % Plan decomposition.
+    selectGoal(State, Goals, Goal),                   % Get current Goal from Goals, that is not a memeber of State.
+    achieves(Action, Goal),                           % 
     can(Action, Condition),
     plan(State, Condition, PrePlan, MidState_1),
-    apply(MidState_1, Goals, PostPlan, FinalState).
+    apply(MidState_1, Action, MidState_2),
+    plan(MidState_2, Goals, PostPlan, FinalState).
