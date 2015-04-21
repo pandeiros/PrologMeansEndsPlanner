@@ -13,14 +13,14 @@
 % --------------------------------------
 %
 % Consult these files:
-:- [plan, satisfaction, goals, actions].
+:- [plan, achievement, goals, actions].
 
 % ======================================
 %     --- A State in our World ---
 % --------------------------------------
 %
 %   c   d
-%   a   b      <- blocks
+%   a e b      <- blocks
 %   -------
 %   1 2 3 4    <- places
 
@@ -28,6 +28,7 @@ isBlock(a).     % Facts about blocks.
 isBlock(b).
 isBlock(c).
 isBlock(d).
+isBlock(e).
 
 place(1).       % Facts about places.
 place(2).
@@ -39,8 +40,8 @@ object(X) :-    % Object is a block OR place.
   place(X).
 
 % Current state
-state([clear(2), clear(4), clear(d), clear(c),     % Nothing is put on these elements.
-        on(a,1), on(b,3), on(c,a), on(d,b)] ).     % on(X, Y) - X is put on Y.
+state([clear(e), clear(4), clear(d), clear(c),     % Nothing is put on these elements.
+        on(a,1), on(b,3), on(c,a), on(d,b), on(e,2)] ).     % on(X, Y) - X is put on Y.
 
 % ======================================
 %          --- Main Query ---

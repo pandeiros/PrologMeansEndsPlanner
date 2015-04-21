@@ -1,18 +1,39 @@
 % ======================================
 %           --- Goals ---
 % --------------------------------------
-% >>> selectGoal(State, Goals, Goal)
+% >>> chooseGoal(State, Goals, Goal)
 
-% Select Goal that is in Goals, but not in current State.
-selectGoal(State, Goals, Goal) :-
+% Choose Goal that is in Goals, but not in current State.
+chooseGoal(State, Goals, Goal) :-
   member(Goal, Goals),
-  \+ member(Goal, State).      % Not satisfied yet.
+  \+ member(Goal, State).      % Not achieved yet.
 
 % --------------------------------------
-% >>> achieves(Action, Goal)
+% >>> instanceGoal(Goal)
 
-% Goal is achievable if it is a member of Goals that
-% will lead to Action being performed.
-achieves(Action, Goal) :-
-  affect(Action, Goals),
-  member(Goal, Goals).
+%
+instanceGoal(clear(X)) :-
+  var(X),
+  isBlock(X).
+
+%
+instanceGoal(on(X, Y)) :-
+  var(X),
+  var(Y),
+  isBlock(X),
+  object(Y).
+
+% --------------------------------------
+% >>> holds(Diff)
+
+%
+holds(different(X, Y)) :-
+    var(X),
+    var(Y),
+    X \== Y.
+
+%
+holds(different(X, Y)) :-
+    \+ var(X),
+    \+ var(Y),
+    \+ X == Y.
