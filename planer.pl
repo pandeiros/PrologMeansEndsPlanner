@@ -39,11 +39,19 @@ object(X) :-    % Object is a block OR place.
   isBlock(X) ;
   place(X).
 
+%======================================
+%          --- Main Program ---
+% --------------------------------------
 % Current state
-state([clear(e), clear(4), clear(d), clear(c),     % Nothing is put on these elements.
+state([clear(e), clear(4), clear(d), clear(c),              % Nothing is put on these elements.
         on(a,1), on(b,3), on(c,a), on(d,b), on(e,2)] ).     % on(X, Y) - X is put on Y.
 
-% ======================================
-%          --- Main Query ---
-% --------------------------------------
-%  state(State), plan(State, [on(a,b)], Plan, FinState).
+% Example goal(s).
+goals([on(a,b)]).
+
+showPlan :-
+    state(State),
+    goals(Goals),
+    plan(State, Goals, Plan, _),
+    write('Plan: '),
+    write(Plan).

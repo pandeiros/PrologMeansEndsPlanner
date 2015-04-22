@@ -24,16 +24,16 @@ instanceGoal(on(X, Y)) :-
   object(Y).
 
 % --------------------------------------
-% >>> holds(Diff)
+% >>> diff(Diff)
 
 %
-holds(different(X, Y)) :-
+diff(different(X, Y)) :-
     var(X),
     var(Y),
     X \== Y.
 
 %
-holds(different(X, Y)) :-
+diff(different(X, Y)) :-
     \+ var(X),
     \+ var(Y),
     \+ X == Y.

@@ -16,7 +16,7 @@ plan(State, Goals, [], State) :-
 plan(State, Goals, Plan, FinalState) :-
     append(PrePlan, [Action | PostPlan], Plan),       % Plan decomposition.
     chooseGoal(State, Goals, Goal),                   % Get current Goal from Goals, that is not a memeber of State.
-    achieves(Action, Goal),                           %
+    achieves(Action, Goal),                           
     requires(Action, Conditions),
     plan(State, Conditions, PrePlan, MidState_1),
     performAction(MidState_1, Action, MidState_2),

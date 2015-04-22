@@ -20,7 +20,7 @@ goalsAchieved(State, [Goal | OtherGoals])  :-
 
 %
 goalsAchieved(State, [Goal | OtherGoals])  :-
-    holds(Goal),
+    diff(Goal),
     goalsAchieved(State, OtherGoals).
 
 % --------------------------------------
