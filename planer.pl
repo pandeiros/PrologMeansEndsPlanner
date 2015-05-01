@@ -49,9 +49,16 @@ state([clear(e), clear(4), clear(d), clear(c),              % Nothing is put on 
 % Example goal(s).
 goals([on(a,b)]).
 
-showPlan :-
-    state(State),
-    goals(Goals),
+% Plan execution with depth generation.
+initPlan(MaxLimit, State, Goals, Plan) :-
     plan(State, Goals, Plan, _),
     write('Plan: '),
     write(Plan).
+
+%initPlan(_, _, _, _) :-
+%    write('Nie znaleziono planu.').
+
+showPlan :-
+    state(State),
+    goals(Goals),
+    initPlan(5, State, Goals, _).

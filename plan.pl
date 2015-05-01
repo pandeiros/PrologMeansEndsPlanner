@@ -16,8 +16,20 @@ plan(State, Goals, [], State) :-
 plan(State, Goals, Plan, FinalState) :-
     append(PrePlan, [Action | PostPlan], Plan),       % Plan decomposition.
     chooseGoal(State, Goals, Goal),                   % Get current Goal from Goals, that is not a memeber of State.
-    achieves(Action, Goal),                           
+    achieves(Action, Goal),
     requires(Action, Conditions),
     plan(State, Conditions, PrePlan, MidState_1),
     performAction(MidState_1, Action, MidState_2),
     plan(MidState_2, Goals, PostPlan, FinalState).
+
+% --------------------------------------
+% >>> generateNum(From, Max, N)
+
+% Generate number between Min and Max (via increment).
+generateNum(Min, Max, N) :-
+    Min < Max,
+    NewMin is Min + 1,
+    generateNum(NewMin, Max, N).
+
+% First attempt end in setting N to Min.
+generateNum(Min, Max, Min).
