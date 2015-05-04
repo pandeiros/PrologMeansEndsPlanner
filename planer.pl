@@ -59,6 +59,6 @@ initPlan(MaxLimit, State, Goals, Plan) :-
 %    write('Nie znaleziono planu.').
 
 showPlan :-
-    stateX3(State),
-    goalsX3(Goals),
-    initPlan(5, State, Goals, _).
+    stateX2(State),
+    goalsX2(Goals),
+    initPlan(10, State, Goals, _).

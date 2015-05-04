@@ -45,7 +45,7 @@ preserves(Action, Goals) :-
     ).
 
 % --------------------------------------
-% >>> preserves(Action, Goals)
+% >>> processConstraints(Action, State)
 
 processConstraints(move(Block, From, To), State) :-
     member(on(Block, From), State),
