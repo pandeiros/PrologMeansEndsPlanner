@@ -4,9 +4,10 @@
 % >>> chooseGoal(State, Goals, Goal)
 
 % Choose Goal that is in Goals, but not in current State.
-chooseGoal(State, Goals, Goal) :-
+chooseGoal(State, Goals, Goal, RestGoals) :-
   member(Goal, Goals),
-  \+ member(Goal, State).      % Not achieved yet.
+  \+ member(Goal, State),      % Not achieved yet.
+  subtract(Goals, [Goal], RestGoals).
 
 % --------------------------------------
 % >>> instanceGoal(Goal)
