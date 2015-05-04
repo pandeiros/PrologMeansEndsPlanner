@@ -9,7 +9,8 @@ requires(move(Block, From, To), % Action
     clear(To),
     on(Block, From),            % Block is actually on the "From" object.
     different(From, To),        % We want to actually change place.
-    different(Block, From)] ).  % We cannot move Block from itself.
+    different(Block, From),     % We cannot move Block from itself.
+    different(Block, To)] ).
 
 % --------------------------------------
 % >>> affect(Action, Effect)
@@ -22,10 +23,10 @@ affect(move(Block,From,To),  [on(Block,To), clear(From)]).
 
 %
 performAction(State, Action, NewState) :-
-  delete(Action, DelList),
-  deleteAll(State, DelList, MidState), !,
-  affect(Action, AddList),
-  append(AddList, MidState, NewState).
+    delete(Action, DelList),
+    deleteAll(State, DelList, MidState), !,
+    affect(Action, AddList),
+    append(AddList, MidState, NewState).
 
 % --------------------------------------
 % >>> deleteAll(L1, L2, Diff)
@@ -34,13 +35,13 @@ performAction(State, Action, NewState) :-
 deleteAll([], _, []).
 
 %
-deleteAll( [X | L1], L2, Diff)  :-
-  member( X, L2),  !,
-  deleteAll( L1, L2, Diff).
+deleteAll([X | L1], L2, Diff)  :-
+    member(X, L2),  !,
+    deleteAll(L1, L2, Diff).
 
 %
 deleteAll([X | L1], L2, [X | Diff])  :-
-  deleteAll( L1, L2, Diff).
+    deleteAll(L1, L2, Diff).
 
 % --------------------------------------
 % >>> delete(Action, Effect)

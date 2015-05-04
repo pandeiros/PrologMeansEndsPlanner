@@ -13,7 +13,7 @@
 % --------------------------------------
 %
 % Consult these files:
-:- [plan, achievement, goals, actions].
+:- [plan, achievement, goals, actions, states].
 
 % ======================================
 %     --- A State in our World ---
@@ -26,14 +26,14 @@
 
 isBlock(a).     % Facts about blocks.
 isBlock(b).
-isBlock(c).
-isBlock(d).
-isBlock(e).
+% isBlock(c).
+% isBlock(d).
+% isBlock(e).
 
 place(1).       % Facts about places.
 place(2).
-place(3).
-place(4).
+% place(3).
+% place(4).
 
 object(X) :-    % Object is a block OR place.
   isBlock(X) ;
@@ -59,6 +59,6 @@ initPlan(MaxLimit, State, Goals, Plan) :-
 %    write('Nie znaleziono planu.').
 
 showPlan :-
-    state(State),
-    goals(Goals),
+    stateX2(State),
+    goalsX1(Goals),
     initPlan(5, State, Goals, _).
