@@ -15,7 +15,8 @@ plan(State, Goals, Plan, FinalState) :-
 plan(State, Goals, _, [], State, DebugLevel) :-
     NewDebugLevel is DebugLevel + 1,
     printDebug('PLAN (CHECK)', '', NewDebugLevel),
-    goalsAchieved(State, Goals).
+    NewDebugLevel2 is DebugLevel + 2,
+    goalsAchieved(State, Goals, NewDebugLevel2).
 
 % Otherwise, we decompose plan into PrePlan and the rest - PostPlan.
 plan(State, Goals, Protected, Plan, FinalState, DebugLevel) :-
@@ -42,7 +43,11 @@ plan(State, Goals, Protected, Plan, FinalState, DebugLevel) :-
 
     printDebug('EXIT PRE-PLAN', '', NewDebugLevel),
 
-    performAction(MidState_1, Action, MidState_2),
+    printDebug('PERFORM ACTION', '', NewDebugLevel),
+    NewDebugLevel2 is DebugLevel + 2,
+    performAction(MidState_1, Action, MidState_2, NewDebugLevel2),
+    printDebug('MidState 1', MidState_1, NewDebugLevel),
+    printDebug('MidState 2', MidState_2, NewDebugLevel),
 
     printDebug('CALL POST-PLAN', '', NewDebugLevel),
     plan(MidState_2, Goals, [Goal | Protected], PostPlan, FinalState, NewDebugLevel),

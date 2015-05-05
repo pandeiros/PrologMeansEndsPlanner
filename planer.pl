@@ -59,7 +59,7 @@ initPlan(MaxLimit, State, Goals) :-
     write(Plan).
 
 showPlan :-
-    stateX2(State),
-    goalsX2(Goals),
+    stateX3(State),
+    goalsX3(Goals),
     maxDepthLevel(MaxDepth),
     initPlan(10, State, Goals).

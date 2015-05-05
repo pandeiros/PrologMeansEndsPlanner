@@ -22,11 +22,14 @@ affect(move(Block,From,To),  [on(Block,To), clear(From)]).
 % >>> performAction(State, Action, NewState): Action executed in State produces NewState
 
 %
-performAction(State, Action, NewState) :-
+performAction(State, Action, NewState, DebugLevel) :-
     delete(Action, DelList),
-    deleteAll(State, DelList, MidState), !,
+    deleteAll(State, DelList, MidState),
     affect(Action, AddList),
-    append(AddList, MidState, NewState).
+    append(AddList, MidState, NewState),
+    printDebug('Action', Action, DebugLevel),
+    printDebug('DelList', DelList, DebugLevel),
+    printDebug('AddList', AddList, DebugLevel).
 
 % --------------------------------------
 % >>> deleteAll(L1, L2, Diff)

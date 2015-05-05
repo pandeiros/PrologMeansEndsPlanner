@@ -14,23 +14,29 @@ chooseGoal(State, Goals, Goal, RestGoals) :-
 %   Goals are achieved withing the State.
 
 % Empty goals are achieved in every State.
-goalsAchieved(_, []).
+goalsAchieved(_, [], _).
 
 % Check every Goal recursively.
-goalsAchieved(State, [Goal | OtherGoals]) :-
+goalsAchieved(State, [Goal | OtherGoals], DebugLevel) :-
     member(Goal, State),
-    goalsAchieved(State, OtherGoals).
+
+    printDebug('Goal achieved', Goal, DebugLevel),
+    goalsAchieved(State, OtherGoals, DebugLevel).
 
 %
-goalsAchieved(State, [Goal | OtherGoals])  :-
+goalsAchieved(State, [Goal | OtherGoals], DebugLevel)  :-
     instanceGoal(Goal),
     member(Goal, State),
-    goalsAchieved( State, OtherGoals).
+
+    printDebug('Goal achieved', Goal, DebugLevel),
+    goalsAchieved(State, OtherGoals, DebugLevel).
 
 %
-goalsAchieved(State, [Goal | OtherGoals])  :-
+goalsAchieved(State, [Goal | OtherGoals], DebugLevel)  :-
     diff(Goal),
-    goalsAchieved(State, OtherGoals).
+
+    printDebug('Goal achieved', Goal, DebugLevel),
+    goalsAchieved(State, OtherGoals, DebugLevel).
 
 % --------------------------------------
 % >>> achieves(Action, Goal)
@@ -47,12 +53,12 @@ achieves(Action, Goal) :-
 %
 instanceGoal(clear(X)) :-
     var(X),
-    isBlock(X).
+    % isBlock(X).
+    object(X).
 
 %
 instanceGoal(on(X, Y)) :-
-    var(X),
-    var(Y),
+    (var(X) ; var(Y)),
     isBlock(X),
     object(Y).
 
@@ -61,12 +67,12 @@ instanceGoal(on(X, Y)) :-
 
 %
 diff(different(X, Y)) :-
-    var(X),
-    var(Y),
+    % var(X),
+    % var(Y),
     X \== Y.
 
 %
 diff(different(X, Y)) :-
-    \+ var(X),
-    \+ var(Y),
+    % \+ var(X),
+    % \+ var(Y),
     \+ X == Y.
