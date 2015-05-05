@@ -8,31 +8,48 @@
 %   FinalState : State of the world we treat as satisfying for now.
 
 plan(State, Goals, Plan, FinalState) :-
-    plan(State, Goals, [], Plan, FinalState).
+    plan(State, Goals, [], Plan, FinalState, 0).
 
 % If Plan is empty, only Goals are checked for current State
 % (However, most of the time a plan decomposition is essential).
-plan(State, Goals, _, [], State) :-
-    % Debug
-    debug1(State, Goals, Plan, FinalState),
-
+plan(State, Goals, _, [], State, DebugLevel) :-
+    NewDebugLevel is DebugLevel + 1,
+    printDebug('PLAN (CHECK)', '', NewDebugLevel),
     goalsAchieved(State, Goals).
 
 % Otherwise, we decompose plan into PrePlan and the rest - PostPlan.
-plan(State, Goals, Protected, Plan, FinalState) :-
-    % Debug
-    debug2(State, Goals, Plan, FinalState),
+plan(State, Goals, Protected, Plan, FinalState, DebugLevel) :-
+    NewDebugLevel is DebugLevel + 1,
+    printDebug('PLAN', '',NewDebugLevel),
+    printDebug('State', State, NewDebugLevel),
+    printDebug('Current goals', Goals, NewDebugLevel),
 
-    append(PrePlan, [Action | PostPlan], Plan),       % Plan decomposition.
-    chooseGoal(State, Goals, Goal, RestGoals),                   % Get current Goal from Goals, that is not a memeber of State.
+    chooseGoal(State, Goals, Goal, RestGoals),        % Get current Goal from Goals, that is not a memeber of State.
+    printDebug('Goal', Goal, NewDebugLevel),
+
     achieves(Action, Goal),
+    printDebug('Action', Action, NewDebugLevel),
+
     requires(Action, Conditions),
-    preserves(Action, Protected),
-    plan(State, Conditions, Protected, PrePlan, MidState_1),
-    processConstraints(Action, MidState_1),
-    write('PERFORM ACTION - \n'),
+    printDebug('Conditions', Conditions, NewDebugLevel),
+
+    %preserves(Action, Protected),
+
+    printDebug('CALL PRE-PLAN', '', NewDebugLevel),
+    plan(State, Conditions, Protected, PrePlan, MidState_1, NewDebugLevel),
+
+    %processConstraints(Action, MidState_1),
+
+    printDebug('EXIT PRE-PLAN', '', NewDebugLevel),
+
     performAction(MidState_1, Action, MidState_2),
-    plan(MidState_2, Goals, [Goal | Protected], PostPlan, FinalState).
+
+    printDebug('CALL POST-PLAN', '', NewDebugLevel),
+    plan(MidState_2, Goals, [Goal | Protected], PostPlan, FinalState, NewDebugLevel),
+    printDebug('EXIT POST-PLAN', '', NewDebugLevel),
+
+    append(PrePlan, [Action | PostPlan], Plan).       % Plan decomposition.
+
 
 % --------------------------------------
 % >>> preserves(Action, Goals)
@@ -69,20 +86,3 @@ generateNum(Min, Max, N) :-
 
 % First attempt end in setting N to Min.
 generateNum(Min, Max, Max).
-
-% Debug info
-debug1(S, G, P, F) :-
-    write('CHECK '),
-    debug2(S,G,P,F).
-
-debug2(S, G, P, F) :-
-    write('PLAN - '),
-    write('State: '),
-    write(S),
-    write(',  Goals: '),
-    write(G),
-    write(',  Plan: '),
-    write(P),
-    write(',  Final: '),
-    write(F),
-    write('\n').

@@ -13,7 +13,7 @@
 % --------------------------------------
 %
 % Consult these files:
-:- [plan, achievement, goals, actions, states].
+:- [plan, debug, goals, actions, states].
 
 % ======================================
 %     --- A State in our World ---
@@ -49,16 +49,17 @@ state([clear(e), clear(4), clear(d), clear(c),              % Nothing is put on 
 % Example goal(s).
 goals([on(a,b)]).
 
+% Depth-increase iteration.
+maxDepthLevel(10).
+
 % Plan execution with depth generation.
-initPlan(MaxLimit, State, Goals, Plan) :-
+initPlan(MaxLimit, State, Goals) :-
     plan(State, Goals, Plan, _),
     write('Plan: '),
     write(Plan).
 
-%initPlan(_, _, _, _) :-
-%    write('Nie znaleziono planu.').
-
 showPlan :-
     stateX2(State),
     goalsX2(Goals),
-    initPlan(10, State, Goals, _).
+    maxDepthLevel(MaxDepth),
+    initPlan(10, State, Goals).
