@@ -1,0 +1,25 @@
+Zaimplementować inkrementację ograniczenia wykonywania planu
+
+plan(Ctr, .... , NSteps) :-
+    Ctr > 0,
+    Ctr1 is Ctr - 1,
+    generate_num (0, Max, N),
+    .
+    .
+    .
+    plan (N, ... NSteps1)  -->
+
+
+-->
+    N2 is Ctr1 - NSteps1.
+    plan (N2, ..., NSteps2)
+    NStep is NStep + NStep + 1.
+
+    --------------------
+
+    plan_ext(Max,....) :-
+        gen_num (0, Max, N),
+        plan....
+
+    plan_ext(....) :-
+        write('Nie udało się dla danego ograniczenia').

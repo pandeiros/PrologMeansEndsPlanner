@@ -5,21 +5,21 @@
 printDebug(Msg, Var, Level) :-
     printDebugMargin(Level),
     printDebugLevel(Level),
-    print(Msg),
-    print(' : '),
-    print(Var),
-    print('\n').
+    write(Msg),
+    write(" : "),
+    write(Var),
+    nl.
 
 printDebugLevel(Level) :-
-    print('<'),
-    print(Level),
-    print('> ').
+    write("<"),
+    write(Level),
+    write("> ").
 
 printDebugMargin(Level) :-
     Level > 0,
-    print('   '),
+    write("   "),
     NewLevel is Level - 1,
     printDebugMargin(NewLevel).
 
 printDebugMargin(0) :-
-    print('   ').
+    write("   ").

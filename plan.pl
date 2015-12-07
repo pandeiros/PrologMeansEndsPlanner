@@ -14,14 +14,14 @@ plan(State, Goals, Plan, FinalState) :-
 % (However, most of the time a plan decomposition is essential).
 plan(State, Goals, _, [], State, DebugLevel) :-
     NewDebugLevel is DebugLevel + 1,
-    printDebug('PLAN (CHECK)', '', NewDebugLevel),
+    printDebug('PLAN - Checking goals', Goals, NewDebugLevel),
     NewDebugLevel2 is DebugLevel + 2,
     goalsAchieved(State, Goals, NewDebugLevel2).
 
 % Otherwise, we decompose plan into PrePlan and the rest - PostPlan.
 plan(State, Goals, Protected, Plan, FinalState, DebugLevel) :-
     NewDebugLevel is DebugLevel + 1,
-    printDebug('PLAN', '',NewDebugLevel),
+    printDebug('PLANNING...', '',NewDebugLevel),
     printDebug('State', State, NewDebugLevel),
     printDebug('Current goals', Goals, NewDebugLevel),
 
