@@ -16,27 +16,62 @@ chooseGoal(State, Goals, Goal, RestGoals) :-
 % Empty goals are achieved in every State.
 goalsAchieved(_, [], _).
 
-% Check every Goal recursively.
-goalsAchieved(State, [Goal | OtherGoals], DebugLevel) :-
-    member(Goal, State),
-
+goalsAchieved(State, [Goal | OtherGoals], DebuLevel) :-
+    checkGoal(State, Goal),
     goalsAchieved(State, OtherGoals, DebugLevel),
-    printDebug('Goal achieved (member)', Goal, DebugLevel).
+    printDebug('Goal achieved : ', Goal, DebugLevel).
 
+
+
+checkGoal(State, on(X, Y)) :-
+    % nonvar(X),
+    % nonvar(Y),
+    member(on(X, Y), State).
+
+    % goalsAchieved(State, OtherGoals, DebugLevel),
+    % printDebug('Goal achieved (on) ', X, Y, DebugLevel).
+
+checkGoal(State, clear(X)) :-
+    % nonvar(X),
+    member(clear(X), State).
+
+checkGoal(State, clear(X/Y)) :-
+    member(clear(X), State),
+    checkGoal(State, Y).
+
+    % goalsAchieved(State, OtherGoals, DebugLevel),
+    % printDebug('Goal achieved (clear/) ', X, Y, DebugLevel).
+
+    % goalsAchieved(State, OtherGoals),
+    % printDebug('Goal achieved (clear) ', X).
+
+
+checkGoal(State, on(X, Y/Z)) :-
+    member(on(X, Y), State),
+    checkGoal(State, Z).
+
+
+% % Check every Goal recursively.
+% goalsAchieved(State, [Goal | OtherGoals], DebugLevel) :-
+%     member(Goal, State),
 %
-goalsAchieved(State, [Goal | OtherGoals], DebugLevel)  :-
-    instanceGoal(Goal),
-    member(Goal, State),
-
-    goalsAchieved(State, OtherGoals, DebugLevel),
-    printDebug('Goal achieved (instance)', Goal, DebugLevel).
-
+%     goalsAchieved(State, OtherGoals, DebugLevel),
+%     printDebug('Goal achieved (member)', Goal, DebugLevel).
 %
-goalsAchieved(State, [Goal | OtherGoals], DebugLevel)  :-
-    diff(Goal),
-
-    goalsAchieved(State, OtherGoals, DebugLevel),
-    printDebug('Goal achieved (diff)', Goal, DebugLevel).
+% %
+% goalsAchieved(State, [Goal | OtherGoals], DebugLevel)  :-
+%     instanceGoal(Goal),
+%     member(Goal, State),
+%
+%     goalsAchieved(State, OtherGoals, DebugLevel),
+%     printDebug('Goal achieved (instance)', Goal, DebugLevel).
+%
+% %
+% goalsAchieved(State, [Goal | OtherGoals], DebugLevel)  :-
+%     diff(Goal),
+%
+%     goalsAchieved(State, OtherGoals, DebugLevel),
+%     printDebug('Goal achieved (diff)', Goal, DebugLevel).
 
 % --------------------------------------
 % >>> achieves(Action, Goal)

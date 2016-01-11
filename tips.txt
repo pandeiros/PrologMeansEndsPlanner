@@ -23,3 +23,17 @@ plan(Ctr, .... , NSteps) :-
 
     plan_ext(....) :-
         write('Nie udało się dla danego ograniczenia').
+
+-------------------------------------------------------------------------
+---check_goal()
+
+on(X, Y) - tylko ukonkretnione
+
+clear(X) - ukonkretnione
+clear(X/on(X, Z/on(Z, b4))).
+    Trzeba wyprowadzić listę warunków clear(X), on(X, Z), on(Z, b5)
+    Wszystkie warunki sełnine jednocześnie <- osobna funkcja np. check_goal
+
+---chooseGoal()
+    wybór   <- użyć takiego member, które usuwa element z listy (gdzieś na wykłądzie jest)
+    sprawdzenie

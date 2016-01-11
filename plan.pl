@@ -6,20 +6,23 @@
 %   Goals : What do we want to achieve.
 %   Plan  : Current plan (sequence of actions).
 %   FinalState : State of the world we treat as satisfying for now.
+%   MaxLimit : Maximum number of iteration for pre- and post-plan combined.
 
-plan(State, Goals, Plan, FinalState) :-
-    plan(State, Goals, [], Plan, FinalState, 0).
+plan(State, Goals, Plan, FinalState, MaxLimit) :-
+    generateNum(0, MaxLimit, N),
+    printDebug('ITERATION', N, 0),
+    plan(State, Goals, [], Plan, FinalState, N, 0).
 
 % If Plan is empty, only Goals are checked for current State
 % (However, most of the time a plan decomposition is essential).
-plan(State, Goals, _, [], State, DebugLevel) :-
+plan(State, Goals, _, [], State, N, DebugLevel) :-
     NewDebugLevel is DebugLevel + 1,
     printDebug('PLAN - Checking goals', Goals, NewDebugLevel),
     NewDebugLevel2 is DebugLevel + 2,
     goalsAchieved(State, Goals, NewDebugLevel2).
 
 % Otherwise, we decompose plan into PrePlan and the rest - PostPlan.
-plan(State, Goals, Protected, Plan, FinalState, DebugLevel) :-
+plan(State, Goals, Protected, Plan, FinalState, N, DebugLevel) :-
     NewDebugLevel is DebugLevel + 1,
     printDebug('PLANNING...', '',NewDebugLevel),
     printDebug('State', State, NewDebugLevel),
@@ -27,6 +30,7 @@ plan(State, Goals, Protected, Plan, FinalState, DebugLevel) :-
 
     chooseGoal(State, Goals, Goal, RestGoals),        % Get current Goal from Goals, that is not a memeber of State.
     printDebug('Goal', Goal, NewDebugLevel),
+    printDebug('Rest goals', RestGoals, NewDebugLevel),
 
     achieves(Action, Goal),
     printDebug('Action', Action, NewDebugLevel),
@@ -37,7 +41,7 @@ plan(State, Goals, Protected, Plan, FinalState, DebugLevel) :-
     %preserves(Action, Protected),
 
     printDebug('CALL PRE-PLAN', '', NewDebugLevel),
-    plan(State, Conditions, Protected, PrePlan, MidState_1, NewDebugLevel),
+    plan(State, Conditions, Protected, PrePlan, MidState_1, N, NewDebugLevel),
 
     %processConstraints(Action, MidState_1),
 
@@ -50,7 +54,7 @@ plan(State, Goals, Protected, Plan, FinalState, DebugLevel) :-
     printDebug('MidState 2', MidState_2, NewDebugLevel),
 
     printDebug('CALL POST-PLAN', '', NewDebugLevel),
-    plan(MidState_2, Goals, [Goal | Protected], PostPlan, FinalState, NewDebugLevel),
+    plan(MidState_2, Goals, [Goal | Protected], PostPlan, FinalState, N, NewDebugLevel),
     printDebug('EXIT POST-PLAN', '', NewDebugLevel),
 
     append(PrePlan, [Action | PostPlan], Plan).       % Plan decomposition.

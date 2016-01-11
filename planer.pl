@@ -40,10 +40,12 @@ object(X) :-    % Object is a block OR place.
 
 %======================================
 %          --- Main Program ---
-% --------------------------------------
+% -------------------------------------
+%                 Data
+%--------------------------------------
 % Current state
 state([clear(2), clear(4), clear(d), clear(b),     % Nothing is put on these elements.
-        on(a,1), on(b,3), on(c,a), on(d,c)] ).     % on(X, Y) - X is put on Y.
+        on(d,1), on(b,3), on(a,d), on(c,a)] ).     % on(X, Y) - X is put on Y.
 
 % Example goal(s).
 goals([on(c,b)]).
@@ -53,14 +55,17 @@ maxDepthLevel(10).
 
 % Plan execution with depth generation.
 initPlan(MaxLimit, State, Goals) :-
-    plan(State, Goals, Plan, _),
+    plan(State, Goals, Plan, _, MaxLimit),
     nl,
     write("============================================\n  Plan: "),
     write(Plan),
     write("\n============================================").
 
+%--------------------------------------
+%            Entry point
+%--------------------------------------
 showPlan :-
     state(State),
     goals(Goals),
     maxDepthLevel(MaxDepth),
-    initPlan(10, State, Goals).
+    initPlan(MaxDepth, State, Goals).
