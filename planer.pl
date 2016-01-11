@@ -18,9 +18,9 @@
 % ======================================
 %     --- A State in our World ---
 % --------------------------------------
-%   d
 %   c
-%   a   b      <- blocks
+%   a
+%   d   b      <- blocks
 %   -------
 %   1 2 3 4    <- places
 
@@ -44,11 +44,11 @@ object(X) :-    % Object is a block OR place.
 %                 Data
 %--------------------------------------
 % Current state
-state([clear(2), clear(4), clear(d), clear(b),     % Nothing is put on these elements.
+state([clear(2), clear(4), clear(c), clear(b),     % Nothing is put on these elements.
         on(d,1), on(b,3), on(a,d), on(c,a)] ).     % on(X, Y) - X is put on Y.
 
 % Example goal(s).
-goals([on(c,b)]).
+goals([on(d,b)]).
 
 % Depth-increase iteration.
 maxDepthLevel(10).

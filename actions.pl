@@ -1,16 +1,25 @@
 % ======================================
 %           --- Actions ---
 % --------------------------------------
-% >>> requires(Action, Conditions)
+% >>> requires(Action, CondGoals, Conditions)
 
 % Action is possible if all conditions are fulfilled.
-requires(move(Block, From, To), % Action
-    [clear(Block),              % Nothing is on the Block and on the target.
-    clear(To),
-    on(Block, From),            % Block is actually on the "From" object.
-    different(From, To),        % We want to actually change place.
-    different(Block, From),     % We cannot move Block from itself.
-    different(Block, To)] ).
+requires(move(Block, From, To),         % Action
+        [clear(Block), clear(To)],              % CondGoals
+        [on(Block, From), diff(From, To), diff(Block, From)]) :-   % Conditions.
+    % different(From, To),        % We want to actually change place.
+    % different(Block, From),     % We cannot move Block from itself.
+    different(Block, To),
+    nonvar(Block),
+    var(From),
+    nonvar(To).
+
+requires(move(Block, From, To),
+        [clear(Block/ on(Block, From))],
+        [clear(To), diff(Block, To)]) :-
+    var(Block),
+    nonvar(From),
+    var(To).
 
 % --------------------------------------
 % >>> affect(Action, Effect)

@@ -35,13 +35,14 @@ plan(State, Goals, Protected, Plan, FinalState, N, DebugLevel) :-
     achieves(Action, Goal),
     printDebug('Action', Action, NewDebugLevel),
 
-    requires(Action, Conditions),
+    requires(Action, CondGoals, Conditions),
+    printDebug('CondGoals', CondGoals, NewDebugLevel),
     printDebug('Conditions', Conditions, NewDebugLevel),
 
     %preserves(Action, Protected),
 
     printDebug('CALL PRE-PLAN', '', NewDebugLevel),
-    plan(State, Conditions, Protected, PrePlan, MidState_1, N, NewDebugLevel),
+    plan(State, CondGoals, Protected, PrePlan, MidState_1, N, NewDebugLevel),
 
     %processConstraints(Action, MidState_1),
 

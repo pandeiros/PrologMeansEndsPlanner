@@ -16,7 +16,7 @@ chooseGoal(State, Goals, Goal, RestGoals) :-
 % Empty goals are achieved in every State.
 goalsAchieved(_, [], _).
 
-goalsAchieved(State, [Goal | OtherGoals], DebuLevel) :-
+goalsAchieved(State, [Goal | OtherGoals], DebugLevel) :-
     checkGoal(State, Goal),
     goalsAchieved(State, OtherGoals, DebugLevel),
     printDebug('Goal achieved : ', Goal, DebugLevel).
@@ -50,6 +50,10 @@ checkGoal(State, on(X, Y/Z)) :-
     member(on(X, Y), State),
     checkGoal(State, Z).
 
+checkGoal(State, diff(X, Y)) :-
+    member(diff(X, Y), State),
+    different(X, Y).
+
 
 % % Check every Goal recursively.
 % goalsAchieved(State, [Goal | OtherGoals], DebugLevel) :-
@@ -79,8 +83,9 @@ checkGoal(State, on(X, Y/Z)) :-
 % Goal is achievable if it is a member of Goals that
 % will lead to Action being performed.
 achieves(Action, Goal) :-
-    affect(Action, Goals),
-    member(Goal, Goals).
+    affect(Action, Effect),
+    member(Goal, Effect).
+    % printDebug('Goals', Goals, 0).
 
 % --------------------------------------
 % >>> instanceGoal(Goal)
@@ -98,16 +103,32 @@ instanceGoal(on(X, Y)) :-
     object(Y).
 
 % --------------------------------------
-% >>> diff(Diff)
+% >>> different(Diff)
 
-%
-diff(different(X, Y)) :-
+different(X, Y) :-
     var(X),
     var(Y),
     X \== Y.
 
+different(X, Y) :-
+    nonvar(X),
+    nonvar(Y),
+    X \== Y.
+
+% different(X, Y) :-
+%     var(X),
+%     nonvar(Y) ;
+%     nonvar(X),
+%     var(Y).
+
+% differen
+% diff(different(X, Y)) :-
+%     var(X),
+%     var(Y),
+%     X \== Y.
 %
-diff(different(X, Y)) :-
-    \+ var(X),
-    \+ var(Y),
-    \+ X == Y.
+% %
+% diff(different(X, Y)) :-
+%     \+ var(X),
+%     \+ var(Y),
+%     \+ X == Y.
