@@ -7,11 +7,10 @@
 requires(move(Block, From, To),         % Action
         [clear(Block), clear(To)],              % CondGoals
         [on(Block, From), diff(From, To), diff(Block, From)]) :-   % Conditions.
-    % different(From, To),        % We want to actually change place.
-    % different(Block, From),     % We cannot move Block from itself.
     different(Block, To),
     nonvar(Block),
     var(From),
+    \+ place(Block),
     nonvar(To).
 
 requires(move(Block, From, To),
@@ -30,15 +29,34 @@ affect(move(Block,From,To),  [on(Block,To), clear(From)]).
 % --------------------------------------
 % >>> performAction(State, Action, NewState): Action executed in State produces NewState
 
-%
-performAction(State, Action, NewState, DebugLevel) :-
-    delete(Action, DelList),
+
+performAction(State, move(Block, From/On, To), NewState, DebugLevel) :-
+    delete(move(Block, From/On, To), DelList),
     deleteAll(State, DelList, MidState),
-    affect(Action, AddList),
+    affect(move(Block, From, To), AddList),
     append(AddList, MidState, NewState),
-    printDebug('Action', Action, DebugLevel),
+    printDebug('Action', move(Block, From, To), DebugLevel),
     printDebug('DelList', DelList, DebugLevel),
     printDebug('AddList', AddList, DebugLevel).
+
+performAction(State, move(Block, From, To), NewState, DebugLevel) :-
+    delete(move(Block, From, To), DelList),
+    deleteAll(State, DelList, MidState),
+    affect(move(Block, From, To), AddList),
+    append(AddList, MidState, NewState),
+    printDebug('Action', move(Block, From, To), DebugLevel),
+    printDebug('DelList', DelList, DebugLevel),
+    printDebug('AddList', AddList, DebugLevel).
+
+appendAction(PrePlan, move(Block, From/_, To), PostPlan, Plan) :-
+    append(PrePlan, [move(Block, From, To) | PostPlan], Plan).
+
+appendAction(PrePlan, Action ,PostPlan, Plan) :-
+    append(PrePlan, [Action | PostPlan], Plan).
+
+
+% instanceAction()
+
 
 % --------------------------------------
 % >>> deleteAll(L1, L2, Diff)
@@ -59,4 +77,6 @@ deleteAll([X | L1], L2, [X | Diff])  :-
 % >>> delete(Action, Effect)
 
 % Action with certain effect to be removed.
+
+delete(move(Block, From/_, To), [on(Block, From), clear(To)]).
 delete(move(Block,From,To),  [on(Block,From), clear(To)]).

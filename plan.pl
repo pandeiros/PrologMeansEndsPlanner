@@ -10,7 +10,7 @@
 
 plan(State, Goals, Plan, FinalState, MaxLimit) :-
     generateNum(0, MaxLimit, N),
-    printDebug('ITERATION', N, 0),
+    printDebug('===== ITERATION ======', N, 0),
     plan(State, Goals, [], Plan, FinalState, N, 0).
 
 % If Plan is empty, only Goals are checked for current State
@@ -47,7 +47,7 @@ plan(State, Goals, Protected, Plan, FinalState, N, DebugLevel) :-
     %processConstraints(Action, MidState_1),
 
     printDebug('EXIT PRE-PLAN', '', NewDebugLevel),
-
+    printDebug('Conditions', Conditions, NewDebugLevel),
     printDebug('PERFORM ACTION', '', NewDebugLevel),
     NewDebugLevel2 is DebugLevel + 2,
     performAction(MidState_1, Action, MidState_2, NewDebugLevel2),
@@ -58,7 +58,7 @@ plan(State, Goals, Protected, Plan, FinalState, N, DebugLevel) :-
     plan(MidState_2, Goals, [Goal | Protected], PostPlan, FinalState, N, NewDebugLevel),
     printDebug('EXIT POST-PLAN', '', NewDebugLevel),
 
-    append(PrePlan, [Action | PostPlan], Plan).       % Plan decomposition.
+    appendAction(PrePlan, Action, PostPlan, Plan).       % Plan decomposition.
 
 
 % --------------------------------------
@@ -86,7 +86,7 @@ processConstraints(move(Block, From, To), State) :-
     Block \== From.
 
 % --------------------------------------
-% >>> generateNum(From, Max, N)
+% >>> generateNum(Min, Max, N)
 
 % Generate number between Min and Max (via increment).
 generateNum(Min, Max, N) :-

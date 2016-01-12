@@ -91,16 +91,16 @@ achieves(Action, Goal) :-
 % >>> instanceGoal(Goal)
 
 %
-instanceGoal(clear(X)) :-
-    var(X),
-    object(X).
-
+% instanceGoal(clear(X)) :-
+%     var(X),
+%     object(X).
 %
-instanceGoal(on(X, Y)) :-
-    var(X),
-    var(Y),
-    isBlock(X),
-    object(Y).
+% %
+% instanceGoal(on(X, Y)) :-
+%     var(X),
+%     var(Y),
+%     isBlock(X),
+%     object(Y).
 
 % --------------------------------------
 % >>> different(Diff)
