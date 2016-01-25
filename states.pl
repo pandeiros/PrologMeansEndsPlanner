@@ -1,55 +1,64 @@
 % ======================================
 %  --- Different states in our World ---
 % --------------------------------------
-%   > State X1 <    WORKING
-%
-%   a      <- blocks
-%   ---
-%   1 2    <- places
-
-isBlock(a).     % Facts about blocks.
-
-place(1).       % Facts about places.
-place(2).
-
-stateX1([clear(a), clear(2),
-        on(a,1)]).
-
-goalsX1([on(a,2)]).
-
-% --------------------------------------
-%   > State X2 <    WORKING
-%
-%   b
-%   a      <- blocks
-%   ---
-%   1 2    <- places
-
-isBlock(b).
-
-goalsX2([on(a,b)]).
-
-stateX2([clear(b), clear(2),
-        on(a,1), on(b,a)]).
-
-% --------------------------------------
-%   > State X3 <
-%
-%
-%
+%   > State 1 <
 %
 %   c
-%   b
-%   a      <- blocks
-%   ---
-%   1 2    <- places
+%   a
+%   d   b      <- blocks
+%   -------
+%   1 2 3 4    <- places
 
-isBlock(d).
-% isBlock(d).
-% isBlock(e).
-% isBlock(f).
+state1([clear(2), clear(4), clear(c), clear(b),
+        on(d,1), on(b,3), on(a,d), on(c,a)] ).
+goals1([on(d,b)]).
 
-goalsX3([on(a,b)]).
+% Simple case, should solve in 3 steps.
 
-stateX3([clear(d), clear(2),
-        on(a,1), on(b,a), on(c,b), on(d,c)]).
+% --------------------------------------
+%   > State 2 <
+%
+%   c
+%   a
+%   d   b      <- blocks
+%   -------
+%   1 2 3 4    <- places
+
+state2([clear(2), clear(4), clear(c), clear(b),
+        on(d,1), on(b,3), on(a,d), on(c,a)] ).
+goals2([on(d,4)]).
+
+% Tricky goal, because without protecting goals,
+% c will move to 2, then a to 4, then d cannot move
+% to 4, so a will move to... d again! And so on.
+% Should take 4 steps.
+
+% --------------------------------------
+%   > State 3 <
+%
+%   c   f
+%   a   e
+%   d   b      <- blocks
+%   -------
+%   1 2 3 4    <- places
+
+state3([clear(2), clear(4), clear(c), clear(f),
+        on(d,1), on(b,3), on(a,d), on(c,a), on(e, b), on(f, e)] ).
+goals3([on(d,b)]).
+
+% Additional steps to make: put e and f somewhere.
+
+% --------------------------------------
+%   > State 4 <
+%
+%   c   f
+%   a   e
+%   d   b      <- blocks
+%   -------
+%   1 2 3 4    <- places
+
+state4([clear(2), clear(4), clear(c), clear(f),
+        on(d,1), on(b,3), on(a,d), on(c,a), on(e, b), on(f, e)] ).
+goals4([on(d,b), on(a, d), on(c, 3)]).
+
+% Added additional goals <- tricky ones....

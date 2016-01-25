@@ -10,7 +10,7 @@
 
 plan(State, Goals, Plan, FinalState, MaxLimit) :-
     generateNum(0, MaxLimit, N),
-    printDebug('===== ITERATION ======', N, 0),
+    printDebug('> > > ITERATION ', N, 0),
     plan(State, Goals, [], Plan, FinalState, N, 0).
 
 % If Plan is empty, only Goals are checked for current State
@@ -37,20 +37,22 @@ plan(State, Goals, Protected, Plan, FinalState, N, DebugLevel) :-
 
     requires(Action, CondGoals, Conditions),
     printDebug('CondGoals', CondGoals, NewDebugLevel),
-    printDebug('Conditions', Conditions, NewDebugLevel),
-
-    %preserves(Action, Protected),
 
     printDebug('CALL PRE-PLAN', '', NewDebugLevel),
     plan(State, CondGoals, Protected, PrePlan, MidState_1, N, NewDebugLevel),
 
-    %processConstraints(Action, MidState_1),
-
     printDebug('EXIT PRE-PLAN', '', NewDebugLevel),
     printDebug('Conditions', Conditions, NewDebugLevel),
+    printDebug('Action', Action, NewDebugLevel),
+
+    instanceAction(Action, Conditions, MidState_1, InstAction),
+    printDebug('InstAction', InstAction, NewDebugLevel),
+
+    checkAction(Action, Protected),
+
     printDebug('PERFORM ACTION', '', NewDebugLevel),
     NewDebugLevel2 is DebugLevel + 2,
-    performAction(MidState_1, Action, MidState_2, NewDebugLevel2),
+    performAction(MidState_1, InstAction, MidState_2, NewDebugLevel2),
     printDebug('MidState 1', MidState_1, NewDebugLevel),
     printDebug('MidState 2', MidState_2, NewDebugLevel),
 
@@ -58,41 +60,18 @@ plan(State, Goals, Protected, Plan, FinalState, N, DebugLevel) :-
     plan(MidState_2, Goals, [Goal | Protected], PostPlan, FinalState, N, NewDebugLevel),
     printDebug('EXIT POST-PLAN', '', NewDebugLevel),
 
-    appendAction(PrePlan, Action, PostPlan, Plan).       % Plan decomposition.
-
-
-% --------------------------------------
-% >>> preserves(Action, Goals)
-
-preserves(Action, Goals) :-
-    delete(Action, Relations),
-    \+ (
-    member(Goal, Relations),
-    member(Goal, Goals)
-    ).
-
-% --------------------------------------
-% >>> processConstraints(Action, State)
-
-processConstraints(move(Block, From, To), State) :-
-    member(on(Block, From), State),
-    member(clear(To), State),
-    member(clear(Block), State),
-    isBlock(Block),
-    object(To),
-    To \== Block,
-    object(From),
-    From \== To,
-    Block \== From.
+    append(PrePlan, [InstAction | PostPlan], Plan).
+    
 
 % --------------------------------------
 % >>> generateNum(Min, Max, N)
+
+% First attempt end in setting N to Min.
+generateNum(Min, Max, Max) :-
+    Min < Max.
 
 % Generate number between Min and Max (via increment).
 generateNum(Min, Max, N) :-
     Min < Max,
     NewMax is Max - 1,
     generateNum(Min, NewMax, N).
-
-% First attempt end in setting N to Min.
-generateNum(Min, Max, Max).

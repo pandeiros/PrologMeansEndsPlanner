@@ -6,7 +6,7 @@
 % Action is possible if all conditions are fulfilled.
 requires(move(Block, From, To),         % Action
         [clear(Block), clear(To)],              % CondGoals
-        [on(Block, From), diff(From, To), diff(Block, From)]) :-   % Conditions.
+        [on(Block, From)]) :- %, diff(From, To), diff(Block, From)]) :-   % Conditions.
     different(Block, To),
     nonvar(Block),
     var(From),
@@ -27,17 +27,8 @@ requires(move(Block, From, To),
 affect(move(Block,From,To),  [on(Block,To), clear(From)]).
 
 % --------------------------------------
-% >>> performAction(State, Action, NewState): Action executed in State produces NewState
-
-
-performAction(State, move(Block, From/On, To), NewState, DebugLevel) :-
-    delete(move(Block, From/On, To), DelList),
-    deleteAll(State, DelList, MidState),
-    affect(move(Block, From, To), AddList),
-    append(AddList, MidState, NewState),
-    printDebug('Action', move(Block, From, To), DebugLevel),
-    printDebug('DelList', DelList, DebugLevel),
-    printDebug('AddList', AddList, DebugLevel).
+% >>> performAction(State, Action, NewState)
+% Action executed in State produces NewState
 
 performAction(State, move(Block, From, To), NewState, DebugLevel) :-
     delete(move(Block, From, To), DelList),
@@ -48,28 +39,46 @@ performAction(State, move(Block, From, To), NewState, DebugLevel) :-
     printDebug('DelList', DelList, DebugLevel),
     printDebug('AddList', AddList, DebugLevel).
 
-appendAction(PrePlan, move(Block, From/_, To), PostPlan, Plan) :-
-    append(PrePlan, [move(Block, From, To) | PostPlan], Plan).
+% --------------------------------------
+% >>> instanceAction(Action, Conditions, State, InstAction)
+% Check conditions and simplify action.
+instanceAction(move(Block, From/_, To), [Condition],
+    State, move(Block, From, To)) :-
 
-appendAction(PrePlan, Action ,PostPlan, Plan) :-
-    append(PrePlan, [Action | PostPlan], Plan).
+    checkGoal(State, Condition).
 
+instanceAction(move(Block, From/_, To), [Condition1, Condition2],
+    State, move(Block, From, To)) :-
 
-% instanceAction()
+    checkGoal(State, Condition1),
+    checkGoal(State, Condition2).
 
+instanceAction(move(Block, From, To), [Condition1, Condition2],
+    State, move(Block, From, To)) :-
+
+    checkGoal(State, Condition1),
+    checkGoal(State, Condition2).
+
+% --------------------------------------
+% >>> checkAction(Action, Protected)
+% Check whether Action does not break fulfilled goals.
+checkAction(_, []).
+checkAction(Action, Protected) :-
+    delete(Action, Relations),
+    \+ (
+        member(Goal, Relations),
+        member(Goal, Protected)
+    ).
 
 % --------------------------------------
 % >>> deleteAll(L1, L2, Diff)
 
-%
 deleteAll([], _, []).
 
-%
 deleteAll([X | L1], L2, Diff)  :-
     member(X, L2),  !,
     deleteAll(L1, L2, Diff).
 
-%
 deleteAll([X | L1], L2, [X | Diff])  :-
     deleteAll(L1, L2, Diff).
 
@@ -77,6 +86,6 @@ deleteAll([X | L1], L2, [X | Diff])  :-
 % >>> delete(Action, Effect)
 
 % Action with certain effect to be removed.
-
 delete(move(Block, From/_, To), [on(Block, From), clear(To)]).
+
 delete(move(Block,From,To),  [on(Block,From), clear(To)]).

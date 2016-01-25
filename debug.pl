@@ -21,15 +21,15 @@ printDebug(Msg, Var1, Var2, Level) :-
     nl.
 
 printDebugLevel(Level) :-
-    write("<"),
+    write("|"),
     write(Level),
-    write("> ").
+    write("| ").
 
 printDebugMargin(Level) :-
     Level > 0,
-    write("   "),
+    write(" - "),
     NewLevel is Level - 1,
     printDebugMargin(NewLevel).
 
 printDebugMargin(0) :-
-    write("   ").
+    write(" - ").

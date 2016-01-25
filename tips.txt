@@ -37,3 +37,9 @@ clear(X/on(X, Z/on(Z, b4))).
 ---chooseGoal()
     wybór   <- użyć takiego member, które usuwa element z listy (gdzieś na wykłądzie jest)
     sprawdzenie
+
+------------------------------------------------------------------------
+Ochrona celów już osiągniętych:
+
+np.
+[clear(p3), on(b7, b2)]

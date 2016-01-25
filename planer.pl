@@ -48,7 +48,7 @@ state([clear(2), clear(4), clear(c), clear(b),     % Nothing is put on these ele
         on(d,1), on(b,3), on(a,d), on(c,a)] ).     % on(X, Y) - X is put on Y.
 
 % Example goal(s).
-goals([on(d, b)]).
+goals([on(d, 4)]).
 
 % Depth-increase iteration.
 maxDepthLevel(10).
@@ -65,7 +65,7 @@ initPlan(MaxLimit, State, Goals) :-
 %            Entry point
 %--------------------------------------
 showPlan :-
-    state(State),
-    goals(Goals),
+    state(State),       % Different states and goals can be chosen
+    goals(Goals),       % accordingly to states.pl file.
     maxDepthLevel(MaxDepth),
     initPlan(MaxDepth, State, Goals).
